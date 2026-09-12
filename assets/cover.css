@@ -1,0 +1,109 @@
+/* ============================================================
+   cover.css —— 文章封面图样式（16:9）
+   底图由本地 AI 生成（ComfyUI），文字由代码叠加。
+   AI 画不好字，所以字一律不交给它。
+   画布 1600×900（16:9），DSF=2 输出 3200×1800。
+   ============================================================ */
+
+:root{
+  --ink:#f2f7fc;
+  --sub:#b9c9da;
+  --dim:#8296ab;
+  --acc:#8fc0ec;
+  --warm:#e0c894;
+  --serif:"Noto Serif SC","Source Han Serif SC",serif;
+  --sans:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+.cover{
+  position:relative;
+  width:100vw; height:100vh;
+  overflow:hidden;
+  background:#080b10;
+  color:var(--ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* 底图：AI 生成的实景，提一点亮度和饱和度，免得在信息流里发闷 */
+.cover .img{
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  filter:brightness(1.22) saturate(1.06);
+}
+/* 遮罩：左侧压暗给文字让位，四周收边 */
+.cover .scrim{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(100deg,
+      rgba(5,9,14,.94) 0%,
+      rgba(5,9,14,.84) 26%,
+      rgba(5,9,14,.52) 48%,
+      rgba(5,9,14,.14) 68%,
+      rgba(5,9,14,.30) 100%),
+    linear-gradient(180deg, rgba(5,9,14,.42) 0%, rgba(5,9,14,0) 26%,
+                            rgba(5,9,14,0) 62%, rgba(5,9,14,.62) 100%);
+}
+
+.cover .inner{
+  position:absolute; inset:0;
+  padding:0 96px;
+  display:flex; flex-direction:column; justify-content:center;
+  max-width:1180px;
+}
+
+/* 顶部小标签 */
+.cover .tag{
+  display:inline-flex; align-items:center; gap:9px;
+  align-self:flex-start;
+  font-size:16px; letter-spacing:.16em; color:var(--sub);
+  padding:8px 18px; border-radius:100px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.055);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  margin-bottom:34px;
+}
+.cover .tag b{color:var(--acc); font-weight:600}
+
+/* 主标题 */
+.cover h1{
+  font-family:var(--serif);
+  font-size:82px; font-weight:700; line-height:1.16;
+  letter-spacing:.012em;
+  text-shadow:0 4px 30px rgba(0,0,0,.72);
+}
+/* 换行处留白，避免和上一行挤在一起 */
+.cover h1 .l2{display:block}
+
+/* 主标题与副标题之间的一道短横线 */
+.cover .rule{
+  width:76px; height:3px; margin:34px 0 26px;
+  background:linear-gradient(90deg, var(--acc), rgba(143,192,236,0));
+  border-radius:2px;
+}
+
+/* 副标题 */
+.cover .sub{
+  font-size:27px; line-height:1.62; color:var(--sub);
+  font-weight:300; letter-spacing:.015em;
+  text-shadow:0 2px 16px rgba(0,0,0,.7);
+}
+.cover .sub b{color:#e6eef7; font-weight:600}
+
+/* 右下角署名 */
+.cover .by{
+  position:absolute; right:96px; bottom:70px;
+  text-align:right;
+  font-size:19px; letter-spacing:.1em; color:var(--dim);
+  text-shadow:0 2px 12px rgba(0,0,0,.8);
+}
+.cover .by .n{display:block; font-size:23px; color:var(--sub); letter-spacing:.06em; margin-bottom:6px}
+
+/* 左下角的细装饰：三条渐短的水平线，暗示"层叠" */
+.cover .bars{position:absolute; left:96px; bottom:74px; display:flex; flex-direction:column; gap:6px}
+.cover .bars i{display:block; height:2px; border-radius:2px; background:rgba(143,192,236,.5)}
+.cover .bars i:nth-child(1){width:64px; opacity:.9}
+.cover .bars i:nth-child(2){width:44px; opacity:.55}
+.cover .bars i:nth-child(3){width:26px; opacity:.3}

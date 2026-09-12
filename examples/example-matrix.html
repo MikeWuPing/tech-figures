@@ -1,0 +1,89 @@
+<!-- 样板：对照矩阵。多方规格表、逐项对比。
+     复制到 <项目>/fig/t/ 下改名即可用。
+     底图为占位路径，素材要自己放（或直接删掉 .bg 这一行走底色）。 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="fig-size" content="1200x700">
+<link rel="stylesheet" href="../figkit.css">
+</head>
+<body>
+<div class="fig">
+  <div class="bg" style="background-image:url('../_asset/bg.png')"></div>
+  <div class="veil"></div>
+
+  <div class="hd">
+    <h1>四方对照表</h1>
+    <div class="sub">演示 .mx 矩阵：表头、行标签、整列高亮</div>
+  </div>
+
+  <div class="bd">
+    <!-- 列宽用 grid-template-columns 控制，行标签那列给宽一点 -->
+    <div class="mx fill" style="grid-template-columns:1.42fr 1fr 1.08fr 1fr 1fr">
+
+      <div class="h"></div>
+      <div class="h">方案 A</div>
+      <div class="h col-hi">方案 B</div>
+      <div class="h">方案 C</div>
+      <div class="h">方案 D</div>
+
+      <div class="c lbl">参数一</div>
+      <div class="c v">128</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">256</div>
+      <div class="c v">128 / 192</div>
+      <div class="c v">256</div>
+
+      <div class="c lbl">参数二</div>
+      <div class="c v">256</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">256</div>
+      <div class="c v">256 / 384</div>
+      <div class="c v">512</div>
+
+      <div class="c lbl">参数三</div>
+      <div class="c v">有</div>
+      <div class="c v col-hi" style="font-weight:600; color:#f0c8c0">无</div>
+      <div class="c v">有</div>
+      <div class="c v">有</div>
+
+      <div class="c lbl">参数四</div>
+      <div class="c v">12ch<br>6400</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">16ch<br>8000</div>
+      <div class="c v">12ch<br>6400</div>
+      <div class="c v">16ch<br>8000</div>
+
+      <div class="c lbl">参数五</div>
+      <div class="c v">约 0.6 TB/s</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">1.6 TB/s</div>
+      <div class="c v">约 0.6 TB/s</div>
+      <div class="c v">1.6 TB/s</div>
+
+      <div class="c lbl">参数六</div>
+      <div class="c v">5.0 / 2.0</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">6.0 / 3.0</div>
+      <div class="c v">5.0 / 2.0</div>
+      <div class="c v">6.0 / 3.1</div>
+
+      <div class="c lbl">参数七</div>
+      <div class="c v">2</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">2</div>
+      <div class="c v">1</div>
+      <div class="c v">2</div>
+
+      <div class="c lbl">参数八</div>
+      <div class="c v">工艺 X</div>
+      <div class="c v col-hi" style="font-weight:600; color:#dcecfb">工艺 Y</div>
+      <div class="c v">工艺 Z</div>
+      <div class="c v">工艺 W</div>
+
+    </div>
+
+    <div class="note key">
+      一句话点出这张表要说明的结论——通常在某一列上。
+    </div>
+  </div>
+
+  <div class="ft">四方对照（示意；数值为占位示例）</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!-- 样板：两栏对照 + 连线。最常用的版式，先抄这个。
+     复制到 <项目>/fig/t/ 下改名即可用。
+     底图为占位路径，素材要自己放（或直接删掉 .bg 这一行走底色）。 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="fig-size" content="1200x620">
+<link rel="stylesheet" href="../figkit.css">
+</head>
+<body>
+<div class="fig">
+  <div class="bg" style="background-image:url('../_asset/bg.png')"></div>
+  <div class="veil"></div>
+  <svg class="wires"></svg>
+
+  <div class="hd">
+    <h1>两栏对照</h1>
+    <div class="sub">演示面板、节点、说明要点与连线</div>
+  </div>
+
+  <div class="bd">
+    <div class="row fill">
+
+      <!-- 左栏：旧方案。默认冷灰，不抢戏 -->
+      <div class="card grow">
+        <div class="ct">旧方案<span class="en">before</span></div>
+        <div class="spec" style="margin:-9px 0 13px">
+          三块<span class="sep">·</span>硅底板<span class="sep">·</span>示例参数一
+        </div>
+
+        <div class="row tight">
+          <div class="node grow" id="p1" style="padding:16px 12px">模块 甲</div>
+          <div class="node grow" id="p2" style="padding:16px 12px">模块 乙</div>
+          <div class="node grow" id="p3" style="flex:.86; padding:16px 12px">模块 丙</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="node flat" style="padding:15px 14px" id="pbase">
+          共享底座<span class="n" style="display:inline; margin-left:8px">充当连接层</span>
+        </div>
+
+        <div class="notes" style="margin-top:15px">
+          <div>各模块向下接到共享底座</div>
+          <div>互连密度高，但底座、组装和良率损失都要付钱</div>
+        </div>
+      </div>
+
+      <!-- 右栏：新方案。主角用暖色（或 .acc 蓝，看全文语义定） -->
+      <div class="card grow tone2">
+        <div class="ct">新方案<span class="en">after</span></div>
+        <div class="spec" style="margin:-9px 0 13px">
+          两块<span class="sep">·</span>有机基板<span class="sep">·</span>示例参数二
+        </div>
+
+        <div class="row tight">
+          <div class="node warm" style="flex:1.15; padding:16px 12px" id="w1">模块 甲</div>
+          <div class="node warm" style="padding:16px 12px" id="w2">模块 丙</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="node flat" style="padding:15px 14px" id="wbase">
+          有机基板<span class="n" style="display:inline; margin-left:8px">不需底座</span>
+        </div>
+
+        <div class="notes warm" style="margin-top:15px">
+          <div>两块之间<b>直接互连</b>，经基板铜线走</div>
+          <div>省掉底座和先进组装，代价是互连面积变大、功耗升高</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note key">
+      这张图的题眼——放一句<b>能概括两栏差异</b>的话。
+    </div>
+  </div>
+
+  <div class="ft">两栏对照（示意，非等比）</div>
+</div>
+
+<script src="../figkit.js"></script>
+<script>
+  window.addEventListener("load", function () {
+    // 左栏：多块各自直落到底座。straight 让每根线各走各的，不收到中心点。
+    ["#p1", "#p2", "#p3"].forEach(function (s) {
+      wire(s, "#pbase", { from: "b", to: "t", straight: true,
+                          color: "rgba(158,180,204,.55)", w: 1.2,
+                          arrow: false, dot: false });
+    });
+    // 右栏：两块之间的横向链路（本图的题眼）
+    wire("#w1", "#w2", { from: "r", to: "l", color: "rgba(207,174,116,.95)",
+                         w: 1.8, dot: false });
+    // 两块落到基板上
+    ["#w1", "#w2"].forEach(function (s) {
+      wire(s, "#wbase", { from: "b", to: "t", straight: true,
+                          color: "rgba(207,174,116,.34)", w: 1.1,
+                          arrow: false, dot: false });
+    });
+  });
+</script>
+</body>
+</html>

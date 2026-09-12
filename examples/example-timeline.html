@@ -1,0 +1,108 @@
+<!-- 样板：时间轴 + 标尺 + 分级流程。含 wire 串联多个节点。
+     复制到 <项目>/fig/t/ 下改名即可用。
+     底图为占位路径，素材要自己放（或直接删掉 .bg 这一行走底色）。 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="fig-size" content="1200x625">
+<link rel="stylesheet" href="../figkit.css">
+</head>
+<body>
+<div class="fig">
+  <div class="bg" style="background-image:url('../_asset/bg.png')"></div>
+  <div class="veil"></div>
+  <svg class="wires"></svg>
+
+  <div class="hd">
+    <h1>节拍与分级</h1>
+    <div class="sub">演示标尺、串联节点与优先级流程</div>
+  </div>
+
+  <div class="bd">
+
+    <div style="font-size:14.5px; color:#dde7f1; line-height:1.5">
+      把一个周期拆成三段：
+    </div>
+
+    <!-- 三段串联，每段之间留白给 wire 走线 -->
+    <div class="row" style="gap:0; align-items:stretch">
+      <div class="node acc" id="r1a" style="flex:1; padding:16px 10px">阶段一<br>窗口 32 ms</div>
+      <div style="flex:0 0 46px"></div>
+      <div class="node acc" id="r1b" style="flex:1; padding:16px 10px">阶段二<br>摊成 8192 次</div>
+      <div style="flex:0 0 46px"></div>
+      <div class="node acc" id="r1c"
+           style="flex:1; padding:16px 10px; font-weight:600;
+                  background:rgba(127,176,221,.30); border-color:rgba(127,176,221,.62)">
+        阶段三<br>每 3.9 µs 一次
+      </div>
+    </div>
+
+    <!-- 标尺：等距刻度 + 下方标注 -->
+    <div class="card" style="padding:13px 22px 8px">
+      <div class="spec" style="letter-spacing:.04em">节拍：周期 = 窗口 ÷ 次数</div>
+      <div class="scale" style="height:62px; margin:0">
+        <div class="rail"></div>
+        <div class="tick" style="left:4%"></div>
+        <div class="tick" style="left:33%"></div>
+        <div class="tick" style="left:62%"></div>
+        <div class="tick" style="left:91%"></div>
+        <div class="mk" style="left:4%">
+          <div class="v">0</div>
+          <div class="l">起点</div>
+        </div>
+        <div class="mk" style="left:33%">
+          <div class="v">3.9 µs</div>
+          <div class="l">一拍</div>
+        </div>
+        <div class="mk" style="left:62%">
+          <div class="v">7.8 µs</div>
+          <div class="l">两拍</div>
+        </div>
+        <div class="mk" style="left:91%">
+          <div class="v">11.7 µs</div>
+          <div class="l">三拍</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:14.5px; color:#dde7f1; line-height:1.5">
+      实际执行时可以推迟，代价是记一笔「欠账」：
+    </div>
+
+    <!-- 三档递进：普通 → 普通 → 警示（暖色 = 需要付代价） -->
+    <div class="row" style="gap:0; align-items:stretch">
+      <div class="node flat" id="r2a" style="flex:1; padding:16px 10px">欠得少<br>排在队尾等空档</div>
+      <div style="flex:0 0 46px"></div>
+      <div class="node flat" id="r2b" style="flex:1; padding:16px 10px">欠得多<br>优先级往上提</div>
+      <div style="flex:0 0 46px"></div>
+      <div class="node warm" id="r2c" style="flex:1; padding:16px 10px">欠过头<br>报错或断链</div>
+    </div>
+
+    <div style="font-size:14px; line-height:1.75; color:var(--sub)">
+      段落之间用 <b style="color:#dfe8f2">普通字重</b> 承接，关键结论再用 <b style="color:#dfe8f2">加粗</b> 挑出来。
+      这张图的重点在结构：三段串联、一条标尺、三档递进。
+    </div>
+
+    <div class="note key">
+      用 <code>.note.key</code> 放这张图的一句话结论——左侧那道蓝线会自动出来。
+    </div>
+
+  </div>
+
+  <div class="ft">时间轴与分级（示意）</div>
+</div>
+
+<script src="../figkit.js"></script>
+<script>
+  window.addEventListener("load", function () {
+    // 串联：起点右侧 → 终点左侧
+    wire("#r1a", "#r1b", { from: "r", to: "l", color: "rgba(127,176,221,.85)", w: 1.6 });
+    wire("#r1b", "#r1c", { from: "r", to: "l", color: "rgba(127,176,221,.85)", w: 1.6 });
+    // 递进：色调随严重程度变化（蓝 → 灰 → 暖）
+    wire("#r2a", "#r2b", { from: "r", to: "l", color: "rgba(158,180,204,.70)", w: 1.4 });
+    wire("#r2b", "#r2c", { from: "r", to: "l", color: "rgba(207,174,116,.90)", w: 1.6 });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+/* ============================================================
+   figkit.css —— 配图设计系统
+   深色芯片底纹 + 磨砂玻璃面板 + 思源衬线标题
+   由 Chromium 渲染（Playwright），截图即成品。
+   ============================================================ */
+
+:root{
+  /* 文字 */
+  --ink:#eef3f9;
+  --sub:#a6b7c9;
+  --dim:#74879c;
+  /* 发丝线 */
+  --hair:rgba(255,255,255,.10);
+  --hair2:rgba(255,255,255,.17);
+  /* 强调 */
+  --acc:#7fb0dd;
+  --acc-soft:rgba(127,176,221,.20);
+  --warm:#cfae74;
+  --warm-soft:rgba(207,174,116,.18);
+  --red:#d98a80;
+  /* 玻璃面板 */
+  --glass:rgba(15,21,28,.62);
+  --glass2:rgba(30,39,50,.52);
+  --glass3:rgba(46,58,73,.44);
+  /* 字体 */
+  --serif:"Noto Serif SC","Source Han Serif SC",serif;
+  --sans:"Noto Sans SC","Source Han Sans SC","Microsoft YaHei",sans-serif;
+  --mono:"Cascadia Mono",Consolas,monospace;
+  /* 尺度 */
+  --r:13px;
+  --r-sm:9px;
+  --pad:40px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── 画布 ────────────────────────────────────────────── */
+.fig{
+  position:relative;
+  width:100vw; height:100vh;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  padding:var(--pad);
+  background:#0f1319;
+  font-family:var(--sans);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* 背景照片层：外扩后虚化，避免边缘发白
+   注意 _asset/bg_*.png 已预先压暗过（均值约 30），这里不要再压亮度。 */
+.bg{
+  position:absolute; inset:-48px; z-index:0;
+  background-size:cover; background-position:center;
+  filter:blur(6px) saturate(.52) brightness(1.0);
+}
+/* 暗角与轻压：只在中下部和四角加一点，保住底纹可见度 */
+.veil{
+  position:absolute; inset:0; z-index:1;
+  background:
+    radial-gradient(130% 100% at 50% 40%, rgba(0,0,0,0) 30%, rgba(0,0,0,.42) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.14) 0%, rgba(0,0,0,0) 45%, rgba(0,0,0,.22) 100%);
+}
+/* 连接线画布
+   必须高于 .bd(8)，否则会被卡片背景盖住；因此走线的位置要避开正文。 */
+.wires{
+  position:absolute; inset:0; z-index:9;
+  width:100%; height:100%;
+  pointer-events:none; overflow:visible;
+}
+
+/* ── 页眉 ────────────────────────────────────────────── */
+.hd{position:relative; z-index:8; flex:none; margin-bottom:22px}
+.hd h1{
+  font-family:var(--serif);
+  font-size:27px; font-weight:700; line-height:1.34;
+  letter-spacing:.012em;
+  color:#f4f8fc;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+.hd .sub{
+  margin-top:7px;
+  font-size:14.5px; line-height:1.5; color:var(--sub);
+  letter-spacing:.01em;
+  text-shadow:0 1px 8px rgba(0,0,0,.5);
+}
+
+/* ── 内容区 ──────────────────────────────────────────── */
+.bd{position:relative; z-index:8; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:14px}
+
+/* ── 页脚图注 ────────────────────────────────────────── */
+.ft{
+  position:relative; z-index:8; flex:none; margin-top:16px;
+  font-size:12px; color:var(--dim); font-style:italic;
+  letter-spacing:.02em; text-shadow:0 1px 6px rgba(0,0,0,.5);
+}
+
+/* ── 磨砂面板 ────────────────────────────────────────── */
+.card{
+  position:relative;
+  background:var(--glass);
+  backdrop-filter:blur(22px) saturate(150%);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);
+  border:1px solid var(--hair);
+  border-radius:var(--r);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.065),
+    0 2px 5px rgba(0,0,0,.30),
+    0 14px 38px rgba(0,0,0,.42);
+  padding:18px 20px;
+  display:flex; flex-direction:column; min-width:0;
+}
+/* 顶部一道高光，是"玻璃"质感的关键 */
+.card::before{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,0) 38%);
+}
+.card.tone2{background:var(--glass2)}
+.card.tone3{background:var(--glass3)}
+
+.card > .ct{
+  font-family:var(--serif); font-size:16.5px; font-weight:600;
+  letter-spacing:.015em; color:#f0f5fa; margin-bottom:14px;
+}
+.card > .ct .en{font-family:var(--sans); font-size:12px; font-weight:400; color:var(--dim); margin-left:8px; letter-spacing:0}
+
+/* 主体内容撑开，页脚贴在底部 */
+.card .spacer{flex:1 1 auto}
+
+/* ── 小方块（die / 部件 / 节点） ─────────────────────── */
+.node{
+  position:relative;
+  background:rgba(56,70,86,.50);
+  border:1px solid var(--hair2);
+  border-radius:var(--r-sm);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09),
+    0 2px 6px rgba(0,0,0,.30);
+  padding:9px 12px;
+  font-size:13.5px; line-height:1.42; color:#eaf1f8;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; min-width:0;
+}
+.node.acc{background:var(--acc-soft); border-color:rgba(127,176,221,.42)}
+.node.warm{background:var(--warm-soft); border-color:rgba(207,174,116,.38)}
+.node.flat{background:rgba(30,39,50,.44); box-shadow:none}
+.node .n{display:block; font-size:11.5px; color:var(--sub); margin-top:3px; letter-spacing:.01em}
+
+/* ── 标签 / 徽标 ─────────────────────────────────────── */
+.tag{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11.5px; line-height:1; letter-spacing:.05em;
+  padding:5px 10px; border-radius:100px;
+  background:rgba(255,255,255,.075);
+  border:1px solid var(--hair);
+  color:var(--sub);
+}
+.tag.acc{background:var(--acc-soft); border-color:rgba(127,176,221,.38); color:#bcd9f2}
+.tag.warm{background:var(--warm-soft); border-color:rgba(207,174,116,.34); color:#e0c894}
+
+/* ── 布局工具 ────────────────────────────────────────── */
+.row{display:flex; gap:14px; align-items:stretch; min-height:0}
+.row.mid{align-items:center}
+.row.tight{gap:9px}
+.col{display:flex; flex-direction:column; gap:10px; min-width:0}
+.col.tight{gap:7px}
+.grow{flex:1 1 auto; min-width:0}
+.fill{flex:1 1 auto; min-height:0}
+.center{align-items:center; justify-content:center}
+
+/* 网格 */
+.grid{display:grid; gap:9px; min-height:0}
+
+/* ── 对照矩阵（四方规格表） ──────────────────────────── */
+.mx{display:grid; gap:1px; font-size:13.5px}
+.mx .h, .mx .c{
+  padding:10px 12px; display:flex; align-items:center;
+  background:rgba(30,39,50,.42);
+  line-height:1.45; min-width:0;
+}
+.mx .h{
+  font-family:var(--serif); font-size:15px; font-weight:600;
+  color:#f0f5fa; background:rgba(46,58,73,.60);
+  justify-content:center; text-align:center;
+}
+.mx .c.lbl{
+  font-family:var(--serif); font-size:14px; font-weight:600;
+  color:#e6eef7; background:rgba(24,32,42,.55);
+}
+.mx .c.v{color:#e2ebf4; justify-content:center; text-align:center}
+.mx .c.dim{color:var(--dim)}
+/* 本代那一列整体提亮 */
+.mx .col-hi, .mx .h.col-hi{
+  background:var(--acc-soft);
+  box-shadow:inset 1px 0 0 rgba(127,176,221,.30), inset -1px 0 0 rgba(127,176,221,.30);
+}
+.mx .h.col-hi{color:#cfe6fb}
+
+/* 整行高亮（按行分组时用） */
+.mx .c.hi{background:var(--acc-soft); color:#dcecfb}
+.mx .c.lbl.hi{color:#dcecfb}
+.mx .c.warm{background:var(--warm-soft); color:#e8d5aa}
+.mx .c.lbl.warm{color:#e8d5aa}
+.mx .c.v.warm{font-weight:500}
+/* 代价/警示行：红，与「暖色 = 对照方」区分开 —— 这两套语义不要混用 */
+.mx .c.bad{background:rgba(217,138,128,.14); color:#eec4bc}
+.mx .c.lbl.bad{color:#f0cec7}
+.mx .c.v.bad{font-weight:500}
+
+/* ── 分层剖面 ────────────────────────────────────────── */
+.stack{display:flex; flex-direction:column-reverse; gap:3px}
+.layer{
+  position:relative; border-radius:7px; padding:11px 15px;
+  font-size:13.5px; line-height:1.4;
+  border:1px solid var(--hair2);
+  background:rgba(52,64,79,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.layer .th{font-size:12px; color:var(--sub); letter-spacing:.02em}
+.layer.si{background:linear-gradient(90deg, rgba(80,110,140,.60), rgba(56,74,94,.55))}
+.layer.sub{background:rgba(40,50,63,.56)}
+.layer.metal{background:linear-gradient(90deg, rgba(150,124,74,.42), rgba(90,78,54,.40))}
+
+/* ── 标尺 ────────────────────────────────────────────── */
+.scale{position:relative; height:64px; margin:6px 0}
+.scale .rail{
+  position:absolute; left:0; right:0; top:34px; height:2px;
+  background:linear-gradient(90deg, var(--dim), var(--acc), var(--warm));
+  border-radius:2px; opacity:.75;
+}
+.scale .tick{position:absolute; top:26px; width:1px; height:18px; background:var(--hair2)}
+.scale .mk{
+  position:absolute; top:0; transform:translateX(-50%);
+  text-align:center; white-space:nowrap;
+}
+.scale .mk .v{font-family:var(--mono); font-size:13px; color:#eaf1f8; letter-spacing:-.01em}
+.scale .mk .l{font-size:11px; color:var(--dim); margin-top:2px}
+
+/* ── 说明条 ──────────────────────────────────────────── */
+.note{
+  font-size:14px; line-height:1.6; color:#dde7f1;
+  padding:13px 17px; border-radius:var(--r-sm);
+  background:rgba(15,21,28,.52);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--hair);
+}
+.note.key{border-left:2px solid var(--acc); color:#e8f1fa}
+.note b{color:#fff; font-weight:600}
+
+/* 细分隔线 */
+.rule{height:1px; background:var(--hair); border:0; flex:none}
+.vrule{width:1px; background:var(--hair); border:0; align-self:stretch; flex:none}
+
+/* 说明要点（点） */
+.notes{display:flex; flex-direction:column; gap:7px;
+       font-size:12.5px; line-height:1.6; color:var(--sub)}
+.notes > div{position:relative; padding-left:15px}
+.notes > div::before{
+  content:""; position:absolute; left:1px; top:8px;
+  width:5px; height:5px; border-radius:50%;
+  background:var(--acc); opacity:.60;
+}
+.notes.warm > div::before{background:var(--warm)}
+.notes b{color:#dfe8f2; font-weight:600}
+
+/* 面板标题下的一行规格 */
+.spec{
+  font-size:12px; color:var(--dim); letter-spacing:.015em;
+  line-height:1.5; font-family:var(--sans);
+}
+.spec .sep{opacity:.42; margin:0 6px}
+
+/* 数值强调 */
+.num{font-family:var(--mono); font-size:15px; color:#f2f7fc; letter-spacing:-.01em}
+.num.big{font-size:21px}
+.unit{font-size:11.5px; color:var(--sub); margin-left:3px; font-family:var(--sans)}
+
+/* 弱化说明行 */
+.cap2{font-size:11.5px; color:var(--dim); line-height:1.5}

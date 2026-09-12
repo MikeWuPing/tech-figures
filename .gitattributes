@@ -1,0 +1,15 @@
+# 统一按 LF 存进仓库，检出时由各平台自己决定
+* text=auto eol=lf
+
+# 图片按二进制处理（本项目当前不含图片，留着以备后用）
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+
+# 这些在 GitHub 上按语言高亮
+*.md   text
+*.py   text
+*.css  text
+*.js   text
+*.html text
