@@ -1,6 +1,8 @@
 ---
 name: tech-figures
 description: Use when 需要为技术文章制作配图、示意图、封面图或意境图——尤其是中文技术文章（知乎等）的深色风格配图。也适用于把已有的 matplotlib/PIL 配图迁移成更精致的版本，或需要生成配图用的底纹与氛围素材。
+license: MIT
+compatibility: 需要 Python 3.8+、playwright、Pillow、numpy 与中文字体；渲染使用本机已装的 Chrome，不下载浏览器。本地 ComfyUI 为可选项。
 ---
 
 # 技术配图
