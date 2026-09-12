@@ -43,27 +43,47 @@ OpenClaw 遵循同一标准，其 skill 是本标准的**超集**——本 skill
 
 ### 安装
 
-**通用方式**（自动识别本机的 AI 客户端并全部链接过去）：
+本仓库是个**技能集合仓库**，技能本体放在 `skills/tech-figures/` 下。
+选择下面任意一种方式，最终目标只有一个——让这个目录出现在你的技能目录里：
+
+```
+~/.claude/skills/tech-figures/SKILL.md     ← 装好后应该长这样
+```
+
+#### 方式一：下载 zip（最省事）
+
+1. 在仓库页面点 **`Code` → `Download ZIP`**
+2. 解压
+3. 把里面的 **`skills/tech-figures/` 整个目录**拷进你的技能目录：
+
+| 客户端 | 拷到哪 |
+|---|---|
+| **Claude Code**（用户级） | `~/.claude/skills/` |
+| **Claude Code**（项目级，团队共享） | `<项目>/.claude/skills/` |
+| **OpenClaw** | `~/.openclaw/skills/` 或 `<工作区>/skills/` |
+| **通用目录**（Codex CLI、Gemini CLI、Copilot 等共用） | `~/.agents/skills/` |
+
+#### 方式二：克隆
+
+```bash
+git clone https://github.com/MikeWuPing/tech-figures.git
+cp -r tech-figures/skills/tech-figures ~/.claude/skills/     # 路径按上表改
+```
+
+想跟随更新的话，用软链代替拷贝：
+
+```bash
+ln -s "$PWD/tech-figures/skills/tech-figures" ~/.claude/skills/tech-figures
+```
+
+#### 方式三：通用安装器
 
 ```bash
 npx skills add MikeWuPing/tech-figures
 ```
 
-**手动装到某个客户端**（改路径即可）：
-
-```bash
-# Claude Code（用户级）
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.claude/skills/tech-figures
-
-# Claude Code（项目级，团队共享）
-git clone https://github.com/MikeWuPing/tech-figures.git <项目>/.claude/skills/tech-figures
-
-# OpenClaw
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.openclaw/skills/tech-figures
-
-# 通用目录（多个客户端共用一份）
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.agents/skills/tech-figures
-```
+它会自动识别本机的 AI 客户端并全部链接过去。**如果它没能识别**（各家安装器对目录
+约定的支持不一），用前两种方式，一样能装上。
 
 装完**开个新会话**让它被发现（Claude Code 用 `/clear` 或重开；OpenClaw 可
 `openclaw gateway restart`）。
@@ -170,20 +190,24 @@ AI 会自己检查这些，缺什么它会告诉你：
 ### Skill 内部结构
 
 ```
-tech-figures/
-  SKILL.md                    给 AI 读的说明书（触发条件、工作流、铁律）
-  references/
-    design-system.md          组件清单、变量、版式配方
-    ai-images.md              底图素材：ComfyUI 调用、能力边界、替代路线
-    checklist.md              交付前核对清单
-  assets/
-    setup.py                  铺进项目 + 探环境
-    figkit.css / figkit.js    配图设计系统 + 连线布线
-    render.py                 Playwright 渲染器
-    cover.css                 封面版式
-    make_bg.py                底纹处理，亮度自动校准
-    comfy_gen.py              本地 ComfyUI 调用器（可选）
-  examples/                   四个可直接抄的样板
+tech-figures/                 ← 本仓库
+  README.md
+  LICENSE
+  skills/
+    tech-figures/             ← 技能本体，把这个目录拷进技能目录即可
+      SKILL.md                给 AI 读的说明书（触发条件、工作流、铁律）
+      references/
+        design-system.md      组件清单、变量、版式配方
+        ai-images.md          底图素材：ComfyUI 调用、能力边界、替代路线
+        checklist.md          交付前核对清单
+      assets/
+        setup.py              铺进项目 + 探环境
+        figkit.css / figkit.js  配图设计系统 + 连线布线
+        render.py             Playwright 渲染器
+        cover.css             封面版式
+        make_bg.py            底纹处理，亮度自动校准
+        comfy_gen.py          本地 ComfyUI 调用器（可选）
+      examples/               四个可直接抄的样板
 ```
 
 ### 许可
@@ -225,27 +249,49 @@ no client-specific fields, so it works anywhere. Triggering and load timing are 
 
 ### Installation
 
-**Universal** (detects installed clients and links the skill into all of them):
+This repository is a **skill collection**: the skill itself lives under `skills/tech-figures/`.
+Pick whichever method below — the goal is the same either way, to get that directory into
+your client's skill folder:
+
+```
+~/.claude/skills/tech-figures/SKILL.md     ← what it should look like once installed
+```
+
+#### Option 1: Download the ZIP (simplest)
+
+1. On the repository page, click **`Code` → `Download ZIP`**
+2. Extract it
+3. Copy the **`skills/tech-figures/` directory** into your client's skill folder:
+
+| Client | Copy into |
+|---|---|
+| **Claude Code** (user level) | `~/.claude/skills/` |
+| **Claude Code** (project level, shared with the team) | `<project>/.claude/skills/` |
+| **OpenClaw** | `~/.openclaw/skills/` or `<workspace>/skills/` |
+| **Shared directory** (Codex CLI, Gemini CLI, Copilot, …) | `~/.agents/skills/` |
+
+#### Option 2: Clone
+
+```bash
+git clone https://github.com/MikeWuPing/tech-figures.git
+cp -r tech-figures/skills/tech-figures ~/.claude/skills/     # adjust the path per the table
+```
+
+To follow updates, symlink instead of copying:
+
+```bash
+ln -s "$PWD/tech-figures/skills/tech-figures" ~/.claude/skills/tech-figures
+```
+
+#### Option 3: Universal installer
 
 ```bash
 npx skills add MikeWuPing/tech-figures
 ```
 
-**Manual, into a specific client** (adjust the path):
-
-```bash
-# Claude Code (user level)
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.claude/skills/tech-figures
-
-# Claude Code (project level, shared with the team)
-git clone https://github.com/MikeWuPing/tech-figures.git <project>/.claude/skills/tech-figures
-
-# OpenClaw
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.openclaw/skills/tech-figures
-
-# Shared directory (one copy serves several clients)
-git clone https://github.com/MikeWuPing/tech-figures.git ~/.agents/skills/tech-figures
-```
+This detects installed AI clients and links the skill into all of them. **If it doesn't pick
+the skill up** (installers differ in which directory layouts they support), use option 1 or 2 —
+they work just as well.
 
 **Start a new session** so it gets discovered (`/clear` or restart in Claude Code;
 `openclaw gateway restart` in OpenClaw).
@@ -359,20 +405,24 @@ The agent checks these itself and will tell you what's missing:
 ### Repository layout
 
 ```
-tech-figures/
-  SKILL.md                    instructions the agent reads (triggers, workflow, hard rules)
-  references/
-    design-system.md          component inventory, variables, layout recipes
-    ai-images.md              backgrounds: ComfyUI usage, limits, fallback routes
-    checklist.md              pre-delivery checklist
-  assets/
-    setup.py                  scaffold into a project + probe the environment
-    figkit.css / figkit.js    figure design system + connector routing
-    render.py                 Playwright renderer
-    cover.css                 cover layout
-    make_bg.py                background processing with auto brightness calibration
-    comfy_gen.py              local ComfyUI driver (optional)
-  examples/                   four templates to copy from
+tech-figures/                 ← this repository
+  README.md
+  LICENSE
+  skills/
+    tech-figures/             ← the skill itself; copy this directory into your skill folder
+      SKILL.md                instructions the agent reads (triggers, workflow, hard rules)
+      references/
+        design-system.md      component inventory, variables, layout recipes
+        ai-images.md          backgrounds: ComfyUI usage, limits, fallback routes
+        checklist.md          pre-delivery checklist
+      assets/
+        setup.py              scaffold into a project + probe the environment
+        figkit.css / figkit.js  figure design system + connector routing
+        render.py             Playwright renderer
+        cover.css             cover layout
+        make_bg.py            background processing with auto brightness calibration
+        comfy_gen.py          local ComfyUI driver (optional)
+      examples/               four templates to copy from
 ```
 
 ### License
