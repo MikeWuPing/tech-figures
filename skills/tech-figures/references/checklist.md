@@ -30,15 +30,30 @@
 
 ## 文章层面
 
-跑一遍，确认每张引用的图都真的存在：
+### 文件存在 ≠ 能显示
 
-```bash
-cd <项目根>
-for p in $(grep -ohE 'figs/[a-zA-Z0-9/_-]+\.png' *.md | sort -u); do
-  [ -f "$p" ] || echo "缺 $p"
-done
+「文件在不在」这个检查是**不够的**。踩过两次，都是这个检查全绿但图就是显示不出来：
+
+**坑一：扩展名与真实格式不符。** 从 PDF 导出图时，某些库（如 PyMuPDF 的 `Pixmap.save`）会**沿用 PDF 内嵌图的原始格式**，于是你可能拿到一个叫 `.png`、里面却装着 **JPEG2000** 的文件。文件在、大小正常、PIL 能打开——但 Chrome、知乎、微信**全都不支持 JPEG2000**，只有 Safari 认。必须验真实格式：
+
+```python
+from PIL import Image
+import re, os
+for md in <所有 .md>:
+    for p in re.findall(r'\((figs/[^)]+)\)', open(md, encoding="utf-8").read()):
+        im = Image.open(p)
+        ext = os.path.splitext(p)[1].lower().lstrip(".")
+        fmt = (im.format or "").lower()
+        if not ((ext == "jpg" and fmt in ("jpeg","jpg")) or ext == fmt):
+            print("不符:", p, "名为", ext, "实为", im.format)
 ```
 
+对不上就重存：`Image.open(p).convert("RGB").save(p, "PNG")`。
+
+**坑二：引用了素材目录。** 发布用的图必须放在**配图目录**里，不能引用 `_asset/` 这类工作目录——素材目录是放原图和处理中间件的，很多发布流程不认。这条要按目录白名单查，不是查文件在不在。
+
+- [ ] 每张引用的图**真实格式与扩展名一致**（上面那段脚本）
+- [ ] 每张引用都落在**配图目录**内，没有指到素材/工作目录
 - [ ] 有没有**孤立的图**（生成了但文章没引用）？删掉或补引用
 - [ ] 有没有**重复的图**（两次生成落到不同位置）？留一份
 - [ ] 临时文件（`_test-*`、`_demo-*`、`_pick`、`_compare`）清理了吗
