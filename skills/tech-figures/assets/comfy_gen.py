@@ -34,13 +34,18 @@ def get(path, **params):
         return r.read()
 
 
-def build(prompt, w, h, steps, seed, ckpt_unet, clip_name, vae_name, cfg, neg=""):
-    """组装一个标准 txt2img 图：UNET+CLIP+VAE 分离加载 → 采样 → 解码 → 存盘"""
+def build(prompt, w, h, steps, seed, ckpt_unet, clip_name, vae_name, cfg, neg="",
+          clip_type="ideogram4", shift=None):
+    """组装一个标准 txt2img 图：UNET+CLIP+VAE 分离加载 → 采样 → 解码 → 存盘
+
+    shift: 若给出，则在采样前插一个 ModelSamplingAuraFlow 节点。
+           Lumina2 系（含 Z-Image）靠它设 shift，官方取值 3.0。
+    """
     g = {
         "1": {"class_type": "UNETLoader",
               "inputs": {"unet_name": ckpt_unet, "weight_dtype": "default"}},
         "2": {"class_type": "CLIPLoader",
-              "inputs": {"clip_name": clip_name, "type": "ideogram4", "device": "default"}},
+              "inputs": {"clip_name": clip_name, "type": clip_type, "device": "default"}},
         "3": {"class_type": "VAELoader", "inputs": {"vae_name": vae_name}},
         "4": {"class_type": "CLIPTextEncode",
               "inputs": {"text": prompt, "clip": ["2", 0]}},
@@ -58,7 +63,24 @@ def build(prompt, w, h, steps, seed, ckpt_unet, clip_name, vae_name, cfg, neg=""
         "9": {"class_type": "SaveImage",
               "inputs": {"images": ["8", 0], "filename_prefix": "apigen"}},
     }
+    if shift is not None:
+        g["10"] = {"class_type": "ModelSamplingAuraFlow",
+                   "inputs": {"model": ["1", 0], "shift": shift}}
+        g["7"]["inputs"]["model"] = ["10", 0]
     return g
+
+
+# 两套模型栈。Z-Image 是 turbo 蒸馏模型：步数少、CFG 必须 1.0。
+STACKS = {
+    "ideogram": dict(ckpt_unet="ideogram4_fp8_scaled.safetensors",
+                     clip_name="qwen3vl_8b_fp8_scaled.safetensors",
+                     vae_name="flux2-vae.safetensors",
+                     clip_type="ideogram4", shift=None, steps=26, cfg=1.0),
+    "zimage":   dict(ckpt_unet="z_image_turbo_bf16.safetensors",
+                     clip_name="qwen_3_4b.safetensors",
+                     vae_name="ae.safetensors",
+                     clip_type="qwen_image", shift=3.0, steps=10, cfg=1.0),
+}
 
 
 def run(graph, timeout=600):
@@ -102,19 +124,28 @@ def fetch(im, dest):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    prompt = a[0]
-    dest = a[1]
+    if not a:
+        sys.exit(__doc__)
+    # 位置参数：提示词 输出 [宽 高 步数 种子 cfg]
+    # 可选：--model zimage|ideogram   默认 zimage（出图快、少长伪文字）
+    model = "zimage"
+    if "--model" in a:
+        i = a.index("--model")
+        model = a[i + 1]
+        a = a[:i] + a[i + 2:]
+    st = STACKS[model]
+
+    prompt, dest = a[0], a[1]
     w = int(a[2]) if len(a) > 2 else 1024
     h = int(a[3]) if len(a) > 3 else 1024
-    steps = int(a[4]) if len(a) > 4 else 20
+    steps = int(a[4]) if len(a) > 4 else st["steps"]
     seed = int(a[5]) if len(a) > 5 else 0
-    cfg = float(a[6]) if len(a) > 6 else 1.0
+    cfg = float(a[6]) if len(a) > 6 else st["cfg"]
 
     g = build(prompt, w, h, steps, seed,
-              ckpt_unet="ideogram4_fp8_scaled.safetensors",
-              clip_name="qwen3vl_8b_fp8_scaled.safetensors",
-              vae_name="flux2-vae.safetensors",
-              cfg=cfg)
+              ckpt_unet=st["ckpt_unet"], clip_name=st["clip_name"],
+              vae_name=st["vae_name"], cfg=cfg,
+              clip_type=st["clip_type"], shift=st["shift"])
     outs = run(g)
     if outs:
         fetch(outs[0], dest)

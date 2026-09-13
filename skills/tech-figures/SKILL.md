@@ -26,14 +26,16 @@ compatibility: 需要 Python 3.8+、playwright、Pillow、numpy 与中文字体�
 
 | 来源 | 什么时候用 | 代价 |
 |---|---|---|
-| **本地 ComfyUI 生成** | 想要可控的构图和色调，或找不到合适的现成照片 | 要装 ComfyUI 和模型；出图有随机性，得挑 |
+| **本地 ComfyUI 生成** | 想要可控的构图和色调，或找不到合适的现成照片 | 要装 ComfyUI 和模型（**用 Z-Image-Turbo，别用 Ideogram**） |
 | **公有领域照片** | 手头有现成的好素材时。真实照片质感往往更好 | 受限于能找到什么；要确认授权 |
 | **纯色 / 渐变** | 只求干净，不要质感 | 最省事，观感平 |
 
 工具链**不依赖任何一种底图**：`make_bg.py` 能处理任意图，`.bg` 也可以留空走兜底色。
 机器上没装 ComfyUI 就换另外两条路，管线的其余部分照常工作。
 
-ComfyUI 怎么找、怎么调用、有什么坑，见 `references/ai-images.md`。
+**模型选择很关键**：实测同一批提示词，Z-Image-Turbo 干净出图率 100%，
+Ideogram 4 只有 8%——后者是按平面设计调过的，天生往画面上放排版，会长出成片伪文字。
+怎么找 ComfyUI、怎么验模型文件完整、怎么调用，见 `references/ai-images.md`。
 
 ## 工具箱
 
@@ -146,6 +148,7 @@ ddr  = figs/ddr
 ## 细节都在 references
 
 - `references/design-system.md` —— 组件清单、变量、间距尺度、版式配方
-- `references/ai-images.md` —— 底图素材：本地 ComfyUI 的发现与调用、能力边界、挑图注意事项，
-  以及没有 ComfyUI 时的替代路线（公有领域素材、纯色渐变）
+- `references/ai-images.md` —— 底图素材：**模型选择（优先 Z-Image-Turbo）**、本地 ComfyUI 的
+  发现与调用、**模型文件完整性校验**、提示词与挑图、封面底图怎么只铺半边，
+  以及没有 ComfyUI 时的替代路线（公有领域素材、纯色渐变）。**本机 ComfyUI 路径也记在这一节。**
 - `references/checklist.md` —— 交付前的核对清单
